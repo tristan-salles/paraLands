@@ -1,4 +1,4 @@
-FROM tristansalles/debian-python:latest
+FROM tristansalles/docker-core:latest
 
 ## =============================================================
 ## base - image ... whatever functionality you want to provide !
