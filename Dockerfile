@@ -45,15 +45,17 @@ RUN mkdir /live && \
 #ADD run-jupyter.py run-jupyter.py
 
 # Persistent / Shared space outside the container
-VOLUME /workspace/volume
+VOLUME /live/share
 
 # expose notebook port and server port
 EXPOSE 8888 9999
 
-ENV LD_LIBRARY_PATH=/workspace/volume/paraLands
+ENV LD_LIBRARY_PATH=/live/share/paraLands
 
 # note we use xvfb which to mimic the X display for lavavu
 ENTRYPOINT ["/usr/local/bin/tini", "--", "xvfbrun.sh"]
+
+WORKDIR /live
 
 # launch notebook
 CMD ["jupyter", "notebook", " --no-browser", "--allow-root", "--ip=0.0.0.0", "--NotebookApp.iopub_data_rate_limit=1.0e10"]
