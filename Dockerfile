@@ -29,7 +29,7 @@ RUN pip install mkdocs mkdocs-bootswatch pymdown-extensions\
 ## These break the current installation of lavavu so we simply remove them
 
 RUN DEBIAN_FRONTEND=noninteractive apt-get remove -y --no-install-recommends \
-    libavcodec-dev \
+    libavcodec-dev \ 
     libavformat-dev \
     libavutil-dev
 
