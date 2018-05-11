@@ -117,7 +117,7 @@ WORKDIR /live
 ENV PYTHONPATH $PYTHONPATH:/live/lib/LavaVu
 
 # get Quagmire
-WORKDIR cd /live/lib
+WORKDIR /live/lib
 RUN git clone https://github.com/University-of-Melbourne-Geodynamics/quagmire.git quagmire && \
     cd quagmire && \
     python setup.py build && \
