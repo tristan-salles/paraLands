@@ -90,21 +90,59 @@ RUN wget http://downloads.sourceforge.net/project/matplotlib/matplotlib-toolkits
 ### Define Jupyter environment
 RUN update-alternatives --set mpirun /usr/bin/mpirun.mpich
 
-ENV TINI_VERSION v0.8.4
-ADD https://github.com/krallin/tini/releases/download/${TINI_VERSION}/tini /usr/local/bin/tini
-RUN chmod +x /usr/local/bin/tini
+# ^^^ Note we choose an older version of ipython because it's tooltips work better.
+#     Also, the system six is too old, so we upgrade for the pip version
 
-# expose notebook port and server port
+# Install Tini.. this is required because CMD (below) doesn't play nice with notebooks for some reason: https
+#NOTE: If you are using Docker 1.13 or greater, Tini is included in Docker itself. This includes all versions of Docker CE. To enable Tini, just pass the --init flag to docker run.
+RUN curl -L https://github.com/krallin/tini/releases/download/v0.6.0/tini > tini && \
+    echo "d5ed732199c36a1189320e6c4859f0169e950692f451c03e7854243b95f4234b *tini" | sha256sum -c - && \
+    mv tini /usr/local/bin/tini && \
+    chmod +x /usr/local/bin/tini
+
+# script for xvfb-run.  all docker commands will effectively run under this via the entrypoint
+RUN printf "#\041/bin/sh \n rm -f /tmp/.X99-lock && xvfb-run -s '-screen 0 1600x1200x16' \$@" >> /usr/local/bin/xvfbrun.sh && \
+    chmod +x /usr/local/bin/xvfbrun.sh
+
+# Add a notebook profile.
+RUN mkdir -p -m 700 /root/.jupyter/ && \
+    echo "c.NotebookApp.ip = '*'" >> /root/.jupyter/jupyter_notebook_config.py && \
+    echo "c.NotebookApp.token = ''" >> /root/.jupyter/jupyter_notebook_config.py
+
+# set working directory to /build
+WORKDIR /live
+
+# setup environment
+ENV PYTHONPATH $PYTHONPATH:/live/lib/LavaVu
+
+# get LavaVu
+WORKDIR /live/lib
+RUN git clone --branch "1.2.14" --single-branch https://github.com/OKaluza/LavaVu && \
+    cd LavaVu && \
+    ls -k src/sqlite3 && \
+    pwd && \
+    make LIBPNG=1 TIFF=1 VIDEO=1 -j4 && \
+    rm -fr tmp
+
+RUN find /live/lib/LavaVu/notebooks -name \*.ipynb  -print0 | xargs -0 jupyter trust
+
+RUN pip install shapely
+RUN pip install descartes
+
+# note we also use xvfb which is required for viz
+ENTRYPOINT ["/usr/local/bin/tini", "--", "xvfbrun.sh"]
+
+# setup space for working in
+VOLUME /live/share
+
+WORKDIR /live
+# expose notebook port
 EXPOSE 8888
 
-ENV LD_LIBRARY_PATH=/fun/share/paraLands
+# expose LavaVu port
+EXPOSE 9999
 
-ENTRYPOINT ["/usr/local/bin/tini", "--"]
+ENV LD_LIBRARY_PATH=/live/lib/:/live/share
 
-RUN mkdir /fun/share
-VOLUME /fun/share
-
-WORKDIR  /fun
-
-CMD jupyter notebook --ip=0.0.0.0 --no-browser \
-    --NotebookApp.token='' --allow-root  --NotebookApp.iopub_data_rate_limit=1.0e10
+# launch notebook
+CMD ["jupyter", "notebook", " --no-browser", "--allow-root", "--ip=0.0.0.0", "--NotebookApp.iopub_data_rate_limit=1.0e10"]
