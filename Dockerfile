@@ -21,7 +21,8 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
     libavutil-dev \
     libswscale-dev \
     libfreetype6-dev \
-    curl
+    curl \
+    python-tk
 
 # (proj4 is buggered up everywhere in apt-get ... so build a known-to-work version from source)
 #
@@ -114,6 +115,13 @@ WORKDIR /live
 
 # setup environment
 ENV PYTHONPATH $PYTHONPATH:/live/lib/LavaVu
+
+# get Quagmire
+WORKDIR cd /live/lib
+RUN git clone https://github.com/University-of-Melbourne-Geodynamics/quagmire.git quagmire && \
+    cd quagmire && \
+    python setup.py build && \
+    python setup.py install
 
 # get LavaVu
 WORKDIR /live/lib
