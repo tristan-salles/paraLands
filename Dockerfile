@@ -134,6 +134,10 @@ RUN git clone --branch "1.2.14" --single-branch https://github.com/OKaluza/LavaV
 
 RUN find /live/lib/LavaVu/notebooks -name \*.ipynb  -print0 | xargs -0 jupyter trust
 
+RUN cd /live/lib/ && \
+    rm -rf h5py* && \
+    rm -rf *.tar.gz
+
 RUN pip install shapely
 RUN pip install descartes
 
