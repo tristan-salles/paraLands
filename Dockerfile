@@ -25,14 +25,13 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
     python-tk
 
 # (proj4 is buggered up everywhere in apt-get ... so build a known-to-work version from source)
-#
-#RUN cd /usr/ && \
-#    curl http://download.osgeo.org/proj/proj-4.9.3.tar.gz > proj-4.9.3.tar.gz && \
-#    tar -xzf proj-4.9.3.tar.gz && \
-#    cd proj-4.9.3 && \
-#    ./configure && \
-#    make all && \local
-#    make install
+RUN cd /usr/ && \
+    curl http://download.osgeo.org/proj/proj-4.9.3.tar.gz > proj-4.9.3.tar.gz && \
+    tar -xzf proj-4.9.3.tar.gz && \
+    cd proj-4.9.3 && \
+    ./configure && \
+    make all && \local
+    make install
 
 RUN DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
         python-gdal \
@@ -68,7 +67,7 @@ RUN pip install  \
     https://github.com/ipython-contrib/jupyter_contrib_nbextensions/tarball/master \
     jupyter_nbextensions_configurator
 
-#RUN pip install --upgrade cartopy
+RUN pip install --upgrade cartopy
 
 # basemap needs compilation :((
 # though maybe you could 'pip install' it after setting the GEOS_DIR
