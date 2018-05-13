@@ -26,13 +26,13 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
 
 # (proj4 is buggered up everywhere in apt-get ... so build a known-to-work version from source)
 #
-RUN cd /usr/local && \
-    curl http://download.osgeo.org/proj/proj-4.9.3.tar.gz > proj-4.9.3.tar.gz && \
-    tar -xzf proj-4.9.3.tar.gz && \
-    cd proj-4.9.3 && \
-    ./configure && \
-    make all && \
-    make install
+#RUN cd /usr/ && \
+#    curl http://download.osgeo.org/proj/proj-4.9.3.tar.gz > proj-4.9.3.tar.gz && \
+#    tar -xzf proj-4.9.3.tar.gz && \
+#    cd proj-4.9.3 && \
+#    ./configure && \
+#    make all && \local
+#    make install
 
 RUN DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
         python-gdal \
