@@ -36,10 +36,9 @@ RUN cd /usr/ && \
 RUN DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
         python-gdal \
         python-pil  \
-        python-h5py \
         libxml2-dev \
         python-lxml \
-        libgeos-dev
+        libgeos-dev 
 
 ## The recent netcdf4 / pythonlibrary stuff doesn't work properly with the default search paths etc
 ## here is a fix which builds the repo version. Hoping that pip install or apt-get install will work again soon
