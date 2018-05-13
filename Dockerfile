@@ -68,7 +68,7 @@ RUN pip install  \
     https://github.com/ipython-contrib/jupyter_contrib_nbextensions/tarball/master \
     jupyter_nbextensions_configurator
 
-RUN pip install --upgrade cartopy
+#RUN pip install --upgrade cartopy
 
 # basemap needs compilation :((
 # though maybe you could 'pip install' it after setting the GEOS_DIR
