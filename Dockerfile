@@ -30,7 +30,7 @@ RUN cd /usr/ && \
     tar -xzf proj-4.9.3.tar.gz && \
     cd proj-4.9.3 && \
     ./configure && \
-    make all && \local
+    make all && \
     make install
 
 RUN DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
@@ -135,7 +135,8 @@ RUN find /live/lib/LavaVu/notebooks -name \*.ipynb  -print0 | xargs -0 jupyter t
 
 RUN cd /live/lib/ && \
     rm -rf h5py* && \
-    rm -rf *.tar.gz
+    rm -rf *.tar.gz && \
+    rm -rf petsc4py-3.8.1
 
 RUN pip install shapely
 RUN pip install descartes
