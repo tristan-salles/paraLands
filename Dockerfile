@@ -53,7 +53,10 @@ RUN pip install \
     runipy \
     ipython \
     cmocean \
-    pyevtk
+    pyevtk \
+    pathlib \
+    voropy \
+    meshio
 
 RUN pip install --no-binary :all: shapely
 
