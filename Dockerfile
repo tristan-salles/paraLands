@@ -3,6 +3,8 @@ FROM tristansalles/docker-core:latest
 MAINTAINER Tristan Salles
 
 ## These are for the full python - scipy stack
+RUN apt-get update -y && \
+    apt-get install -y --no-install-recommends apt-utils
 
 RUN DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
     libscalapack-mpi-dev \
@@ -33,7 +35,7 @@ RUN cd /usr/ && \
     make all && \
     make install
 
-RUN DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+RUN DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends --fix-missing \
         python-gdal \
         python-pil  \
         libxml2-dev \
